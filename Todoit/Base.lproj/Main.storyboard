@@ -33,7 +33,14 @@
                             <outlet property="delegate" destination="fer-bp-lsd" id="94C-jj-sop"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoit" id="oGh-Jp-Ga8"/>
+                    <navigationItem key="navigationItem" title="Todoit" id="oGh-Jp-Ga8">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="8xX-8a-uTH">
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="fer-bp-lsd" id="6qf-re-Xsc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7vE-0V-J8Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
