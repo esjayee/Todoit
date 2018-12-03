@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
     
     let realm = try! Realm()
 
@@ -19,16 +20,20 @@ class CategoryViewController: UITableViewController {
         super.viewDidLoad()
         
         loadCategories()
+        
+        tableView.separatorStyle = .none
+        
     }
-
+    
     // MARK: TableView Datasource Methods
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        // call ancestor function to get cell
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        let category = categories?[indexPath.row]
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added"
         
-        cell.textLabel?.text = category?.name ?? "No categories added"
+        cell.backgroundColor = UIColor.randomFlat
         
         return cell
     }
@@ -62,6 +67,25 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    //MARK: delete data from Swipe
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let category = self.categories?[indexPath.row] {
+            do {
+                try self.realm.write {
+
+                    for item in category.items {
+                        self.realm.delete(item)
+                    }
+
+                    self.realm.delete(category)
+                }
+            } catch {
+                print("Unable to delete category \(error)")
+            }
+        }
+    }
+    
     // MARK: Add New Categories
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -93,7 +117,6 @@ class CategoryViewController: UITableViewController {
         alert.addAction(action)
         
         present(alert, animated: true)
-        
     }
     
     // MARK: TableView Delegate Methods
@@ -112,3 +135,4 @@ class CategoryViewController: UITableViewController {
         }
     }
 }
+
