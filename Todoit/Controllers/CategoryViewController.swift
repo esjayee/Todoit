@@ -96,6 +96,28 @@ class CategoryViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            if let category = categories?[indexPath.row] {
+
+                do {
+                    try realm.write {
+                        // delete child items
+                        for item in category.items {
+                            realm.delete(item)
+                        }
+                        
+                        realm.delete(category)
+                    }
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                } catch {
+                    print("Unable to delete category \(error)")
+                }
+            }
+        }
+    }
+    
     // MARK: TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
